@@ -139,7 +139,7 @@ tar -xf 1.3.tar.gz
 mv daloradius-1.3 daloradius
 
 # Проверяем, все ли правильно 
-localhost
+ls
 
 
 
@@ -152,79 +152,35 @@ mysqlshow freeradiusdb
 # Копируем конфигурацию Daloradius в /var/www/html/daloradius/library/daloradius.conf.php
 cp /var/www/html/daloradius/library/daloradius.conf.php.sample /var/www/html/daloradius/library/daloradius.conf.php
 
-# Открываем 
 
 
-sudo chgrp -h freerad /etc/freeradius/3.0/mods-available/sql
-sudo chown -R freerad:freerad /etc/freeradius/3.0/mods-enabled/sql
-
-
-
-sudo ufw allow to any port 1812 proto udp
-sudo ufw allow to any port 1813 proto udp # Открываем необходимые порты
+# Открываем конфиг Daloradius и меняем следующие значения:
+            $configValues['CONFIG_DB_USER'] = 'freeradiususer';
+            $configValues['CONFIG_DB_PASS'] = 'RadiusDatabasePassword';
+            $configValues['CONFIG_DB_NAME'] = 'freeradiusdb';
 
 
 
-sudo apt install unzip
-
-
-wget https://github.com/lirantal/daloradius/archive/refs/tags/1.1-2.zip # Скачиваем и устанавливаем DoloRadius
-
-unzip 1.1-2.zip
-
-sudo mv daloradius-1.1-2 /var/www/html/daloradius
-
-
-cd /var/www/html/daloradius
-
-sudo mysql -u root -p radius< contrib/db/fr2-mysql-daloradius-and-freeradius.sql
-
-sudo mysql -u root -p radius< contrib/db/mysql-daloradius.sql
-
-
-
-cd /var/www/html/daloradius/library/ # Изменяем разрешения необходимых каталогов и вытаскиваем файл конфигурации
-
-sudo mv daloradius.conf.php.sample daloradius.conf.php
-
+# Выдаем необходимые права
 sudo chown -R www-data:www-data /var/www/html/daloradius/
+sudo chmod 0664 /var/www/html/daloradius/library/daloradius.conf.php
 
-sudo chmod 664 /var/www/html/daloradius/library/daloradius.conf.php
-
-
-
-sudo nano /var/www/html/daloradius/library/daloradius.conf.php # Редактируем файл конфигурации
-
-
-$configValues['CONFIG_DB_USER'] = 'radius';
-$configValues['CONFIG_DB_PASS'] = 'Qwerty1';
-$configValues['CONFIG_DB_NAME'] = 'radius';
-
-
+# Ну и рестартуем FreeRadius
 sudo systemctl restart freeradius
-sudo systemctl restart apache2
 
+# Далее можно сразу добавить сервак, который будет пользоваться Radius аутентификацией 
+sudo nano /etc/freeradius/3.0/clients.conf
 
+# Находим строки ниже:
+            #client private-network-1 {
+            #       ipaddr          = 192.0.2.0/24
+            #       secret          = testing123-1
+            #}
 
+# И сразу после них добавляем наш сервер, как на примере:
+            client Strongswan {
+                    ipaddr = 172.0.0.0
+                    secret = testing123
+            }
 
-# Переходим на вебморду http://IPADRESS/daloradius/login.php
-# username: administrator
-# password: radius
-
-
-E: Unable to locate package php5.6-mail
-E: Couldn't find any package by glob 'php5.6-mail'
-E: Unable to locate package php5.6-mail-mime
-E: Couldn't find any package by glob 'php5.6-mail-mime'
-E: Unable to locate package php5.6-pear
-E: Couldn't find any package by glob 'php5.6-pear'
-E: Unable to locate package php5.6-db
-E: Couldn't find any package by glob 'php5.6-db'
-ubuntu@ip-172-31-8-171:~$ sudo apt find php db
-
-
-sudo apt install php5.6 libapache2-mod-php5.6
-
-sudo apt install php5.6-gd php5.6-mysql php5.6-xml php5.6-xml php5.6-mbstring php5.6-curl
-
-sudo apt install php-mail php-mail-mime php-pear php-db
+# Готово, осталось настроить только серв, который будет использовать аутентификацию
