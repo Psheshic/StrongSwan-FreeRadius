@@ -115,6 +115,7 @@
     
     driver  =  "rlm_sql_${dialect}"
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-223.png)
+
 Комментим строчки связанные с TLS:
 
     # If any of the files below are set, TLS encryption is enabled
@@ -209,6 +210,7 @@
 
     ls
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-228.png)
+
 Импортируем схему Daloradius в БД
 
     mysql  -u  root  -p  freeradiusdb  <  /var/www/html/daloradius/contrib/db/fr2-mysql-daloradius-and-freeradius.sql
@@ -237,6 +239,7 @@
     
     $configValues['CONFIG_DB_NAME']  =  'freeradiusdb';
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-230.png)
+
 Выдаем необходимые права
 
     sudo  chown  -R  www-data:www-data  /var/www/html/daloradius/
