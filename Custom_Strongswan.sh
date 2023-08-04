@@ -803,4 +803,3 @@ echo "Connection instructions have been emailed to you, and can also be found in
 # Windows: https://support.microsoft.com/en-us/kb/926179
 # HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent += AssumeUDPEncapsulationContextOnSendRule, DWORD = 2
 
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAeWOPaWr1TtXyf41ESOgDtG+BP295bUmKxDM4lmF47 SharaKey(2.3)
