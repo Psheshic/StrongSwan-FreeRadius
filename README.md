@@ -1,5 +1,5 @@
 # Установка Freeradius с web-интерфейсом Daloradius
-> Рекомендую брать команды [отсюдова](https://github.com/Psheshic/StrongSwan-FreeRadius/commit/580afbc35d5dbfa4db21ec65aa30552138befad0), чтобы все было норм. Здесь инструкция с картинками :)
+> Рекомендую брать команды [отсюдова](https://github.com/Psheshic/StrongSwan-FreeRadius/blob/main/Installation%20FreeRadius.sh), чтобы все было норм. Здесь инструкция с картинками :)
 
 ## Установка FreeRadius и MariaDB
 
