@@ -1,5 +1,5 @@
 # Установка Freeradius с web-интерфейсом Daloradius
-> Рекомендую брать команды [отсюдова](https://github.com/Psheshic/StrongSwan-FreeRadius/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D1%81%20FreeRadius.sh), чтобы все было норм. Здесь инструкция с картинками :)
+> Рекомендую брать команды [отсюдова](https://github.com/Psheshic/StrongSwan-FreeRadius/blob/main/Installation%20FreeRadius.sh), чтобы все было норм. Здесь инструкция с картинками :)
 
 ㅤ
 
