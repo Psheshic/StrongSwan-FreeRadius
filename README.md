@@ -1,5 +1,7 @@
 # Установка Freeradius с web-интерфейсом Daloradius
-> Рекомендую брать команды [отсюдова](https://github.com/Psheshic/StrongSwan-FreeRadius/blob/main/Installation%20FreeRadius.sh), чтобы все было норм. Здесь инструкция с картинками :)
+> Рекомендую брать команды [отсюдова](https://github.com/Psheshic/StrongSwan-FreeRadius/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D1%81%20FreeRadius.sh), чтобы все было норм. Здесь инструкция с картинками :)
+
+ㅤ
 
 ## Установка FreeRadius и MariaDB
 
@@ -44,7 +46,7 @@
 
   
 
-Проверяем версию PHP, пока что должна быть 5.6
+Проверяем версию PHP, пока что должна быть **5.6**
 
     php  -v
 
@@ -71,6 +73,8 @@
     quit;
 
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-218.png)
+ ㅤ
+ ㅤ
  
 Останавливаем FreeRadius, проверяем
 
@@ -78,7 +82,8 @@
     
     sudo  systemctl  status  freeradius
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-220.png)
-
+ㅤ
+ㅤ
 Добавляем схемы из радиуса в БД
 
     sudo  -i
@@ -99,11 +104,11 @@
     mysqlshow  freeradiusdb
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-222.png)
   
+  ㅤ
+  ㅤ
 Открываем конфиг для работы с MySQL БД
 
     sudo  nano  /etc/freeradius/3.0/mods-available/sql
-
-  
 
 Меняем следующие параметры:
 
@@ -115,6 +120,8 @@
     
     driver  =  "rlm_sql_${dialect}"
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-223.png)
+ㅤ
+ㅤ
 
 Комментим строчки связанные с TLS:
 
@@ -142,9 +149,10 @@
     
     # }
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-224.png)
-  
+  ㅤ
+  ㅤ
 
-Доходим до **# Connection info**, изменяем:
+Доходим до **`# Connection info`**, изменяем:
 
     server  =  "localhost"
     
@@ -160,12 +168,16 @@
     radius_db  =  "freeradiusdb"
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-225.png)
   
+  ㅤ
+  ㅤ
 Еще ниже находим и раскомментируем строку:
 
     read_clients  =  yes
 
  ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-226.png)
 
+ㅤ
+ㅤ
 Активируем MySQL модуль FreeRADIUS
 
     sudo  ln  -s  /etc/freeradius/3.0/mods-available/sql  /etc/freeradius/3.0/mods-enabled/
@@ -185,9 +197,12 @@
 Проверяем радиус, должен быть active (running). В противном случае что-то пошло не так.
 
     sudo  systemctl  status  freeradius
+    
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-227.png)
-  
-## Установка Daloradius
+  ㅤ
+  ㅤ
+  ㅤ
+### Установка Daloradius
 
   
 Переходим: 
@@ -209,7 +224,10 @@
 Проверяем, все ли правильно
 
     ls
+    
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-228.png)
+ㅤ
+ㅤ
 
 Импортируем схему Daloradius в БД
 
@@ -220,10 +238,13 @@
 Проверяем, добавились ли новые таблицы
 
     mysqlshow  freeradiusdb
+    
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-229.png)
+  ㅤ
+  ㅤ
   
 
-Копируем конфигурацию Daloradius в ***/var/www/html/daloradius/library/daloradius.conf.php***
+Копируем конфигурацию Daloradius в ***`/var/www/html/daloradius/library/daloradius.conf.php`***
 
     cp  /var/www/html/daloradius/library/daloradius.conf.php.sample  /var/www/html/daloradius/library/daloradius.conf.php
 
@@ -238,8 +259,11 @@
     $configValues['CONFIG_DB_PASS']  =  'RadiusDatabasePassword';
     
     $configValues['CONFIG_DB_NAME']  =  'freeradiusdb';
+   
 ![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-230.png)
 
+ㅤ
+ㅤ
 Выдаем необходимые права
 
     sudo  chown  -R  www-data:www-data  /var/www/html/daloradius/
@@ -278,5 +302,174 @@
 
   
 
-## Готово! Осталось настроить только сам серв, который будет использовать аутентификацию
+### Готово! Осталось настроить только сам серв, который будет использовать аутентификацию.
 
+ㅤ
+
+## Установка StrongSwan VPN
+
+Скачиваем скрипт с Git
+
+    sudo wget https://raw.githubusercontent.com/Psheshic/StrongSwan-FreeRadius/main/Custom_Strongswan.sh
+
+Даем права на исполнение 
+
+    sudo chmod +x Custom_Strongswan.sh
+
+Запускаем 
+
+    sudo ./Custom_Strongswan.sh
+
+Далее необходимо заполнить данные для подключения стандартного пользователя **VPN**
+
+
+| | |
+|--|--|
+|Hostname for VPN: |  domainpshe.com|
+|VPN username: |  VPNuser|
+|VPN password (no quotes, please): |VPNpassword|
+|Timezone (default: Europe/London):|Europe/Moscow|
+| | |
+
+
+После скрипт предложит создать нового SSH пользователя, этот шаг **нельзя** пропускать, далее нужно будет использовать именно этого юзера. **Под стандартным мы залогиниться уже не сможем!**
+Когда скрипт предложит скопировать ключ на нового пользователя - соглашаемся.
+
+Проверяем, точно ли нормально скопировался ключ:
+
+    sudo su
+    nano /home/newsshuser/.ssh/authorized_keys
+Должна быть только одна строка как на примере:
+
+    ssh-ed25519 AAAAG0Y1OFGVKHIU5OOOOIGAeHerMoRZHoviU1Tsdgsd41EFDgDtG+Kam1NaD1eM4lmF47 UserKey
+Рекомендую сразу перелогиниться, дабы проверить, нормально ли создался новый SSH юзер
+
+ㅤ
+ㅤ
+## Настраиваем подключение StrongSwan'а к FreeRadius'у
+
+### Включаем плагин аутентификации в конфиге `strongswan.conf`
+
+    sudo nano /etc/strongswan.conf
+
+И приводим его в вот такой вид по примеру: 
+
+
+    charon {
+      filelog {
+        charon {
+          path = /var/log/charon.log
+          time_format = %b %e %T
+          ike_name = yes
+          append = no
+          default = 2
+          flush_line = yes
+        }
+        stderr {
+          ike = 2
+          knl = 3
+        }
+      }
+    
+            load_modular = yes
+            plugins {
+    
+                     include strongswan.d/charon/*.conf
+                eap-radius {
+          servers {
+            server-a {
+              address = 172.1.1.1
+              auth_port = 1812   # default
+              acct_port = 1813   # default
+              secret = testing123
+          # nas_identifier = ipsec-gateway
+        }
+      }
+        }
+            }
+    }
+    
+    include strongswan.d/*.conf
+
+
+Где `address = 172.1.1.1`  -- адрес нашего Radius сервера
+
+А `secret = testing123` -- секрет, который мы указали в настройках `clients.conf` при конфигурации **Radius** сервера
+
+> Включение плагина **filelog** просто для удобства работы в будущем.
+
+ㅤ
+ㅤ
+ㅤ
+### Включаем плагин `eap-radius` в конфиге `swanctl.conf`
+
+    sudo nano /etc/swanctl/swanctl.conf
+
+И в конце, после строки `include conf.d/*.conf` прописываем: 
+
+    connections.roadwarrior.remote.auth = eap-radius
+
+Где ***roadwarrior*** -- название нашего соединения по умолчанию. 
+ㅤ
+ㅤ
+ㅤ
+ ### Включаем плагин `eap-radius` в конфиге `swanctl.conf`
+
+Находим строку `rightauth=` и прописываем: 
+
+    rightauth=eap-radius
+
+Перезапускаем `ipsec`
+
+    sudo ipsec restart
+
+ㅤ
+### Готово! Теперь наш StrongSwan сервер будет Radius для аутентификации пользователей VPN.
+ㅤ
+
+
+## Добавление пользователей в веб-интерфейсе Daloradius
+ㅤ
+В браузере открываем:
+
+    http://172.1.1.1/daloradius
+Где `172.1.1.1` -- адрес нашего FreeRadius сервера 
+
+![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-231.png)
+
+Стандартный пароль от  Daloradius -- **radius**
+
+> Рекомендую сразу изменить пароль на более сложный по пути --  http://172.1.1.1/daloradius/config-operators-list.php
+
+ㅤ
+ㅤ
+
+Переходим по пути `http://172.1.1.1/daloradius/mng-new.php`
+
+И создаем пользователя заполняя первые два поля:
+
+![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-233.png)
+
+ㅤ
+
+Сразу проверим работоспособность только созданного пользователя
+
+Переходим по пути `http://172.1.1.1/daloradius/mng-list-all.php`, жмякаем на пользователя и `edit user`:
+
+![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-234.png)
+
+
+ㅤ
+
+Кликаем на **Test Connectivity**
+
+![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-235.png)
+
+ㅤ
+Нажимаем на **Perform Test** и должны увидеть подобный результат: 
+
+![enter image description here](https://adamtheautomator.com/wp-content/uploads/2022/04/image-236.png)
+
+
+
+### Поздравляю! Вы только что настроили StrongSwan, FreeRadius и DaloRadius. Можете переходить к использованию серверваков.
