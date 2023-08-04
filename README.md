@@ -310,7 +310,7 @@
 
 Скачиваем скрипт с Git
 
-    sudo wget https://raw.githubusercontent.com/Psheshic/StrongSwan-FreeRadius/main/Custom_Strongswan.sh
+    sudo wget https://raw.githubusercontent.com/Psheshic/StrongSwan-FreeRadius/main/Custom_StrongSwan.sh
 
 Даем права на исполнение 
 
